@@ -39,7 +39,7 @@ export const weatherTool = new DynamicStructuredTool({
   },
 } as any)
 
-function reduceToUsefulWeatherData(weatherApiResponse) {
+export function reduceToUsefulWeatherData(weatherApiResponse) {
   return {
     location: weatherApiResponse.location,
     current: weatherApiResponse.current,
