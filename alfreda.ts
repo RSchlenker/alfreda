@@ -18,13 +18,20 @@ import { weatherTool } from "./tools/weather"
 import { todayAsString } from "./utils/time"
 import { clockerTool } from "./tools/clocker"
 import { timeTool } from "./tools/time"
+import { travelTime } from "./tools/maps"
 
 const MEMORY_KEY = "chat_history"
 async function getMemoryPrompt() {
   return ChatPromptTemplate.fromMessages([
     [
       "system",
-      `You are very powerful assistant and your name is Alfreda. Today is ${todayAsString()} You are very friendly. Try to use some emojis to make the conversation more fun. Try to be precise and dont add too much information.`,
+      `You are very powerful assistant and your name is Alfreda. 
+      Today is ${todayAsString()} 
+      You are very friendly. 
+      Try to use some emojis to make the conversation more fun. 
+      Try to be precise and dont add too much information.
+      A usual working day is 8 hours long.
+      `,
     ],
     new MessagesPlaceholder(MEMORY_KEY),
     ["user", "{input}"],
@@ -72,7 +79,13 @@ async function initializeAgent() {
     "hwchase17/openai-functions-agent",
   )
   const memoryPrompt = await getMemoryPrompt()
-  const tools = [naherholungsTool, weatherTool, clockerTool, timeTool]
+  const tools = [
+    naherholungsTool,
+    weatherTool,
+    clockerTool,
+    timeTool,
+    travelTime,
+  ]
   const agent = createToolCallingAgent({
     llm,
     prompt: memoryPrompt,
