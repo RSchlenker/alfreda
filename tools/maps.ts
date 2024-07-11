@@ -33,3 +33,11 @@ function extractRelevantRouteInformation(routingResponse) {
     endAddress: routingResponse.routes[0].legs[0].end_address,
   }
 }
+
+export const currentLocation = new DynamicStructuredTool({
+  name: "currentLocation",
+  description:
+    "Get the current location of the user. Before asking the user try to use this tool!",
+  schema: z.object({}),
+  func: () => "The user is in Engen, Germany",
+} as any)

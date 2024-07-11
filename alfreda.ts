@@ -9,6 +9,7 @@ import express from "express"
 import { ChatMessageHistory } from "@langchain/community/stores/message/in_memory"
 import { AIMessage, HumanMessage } from "@langchain/core/messages"
 import { naherholungsTool } from "./tools/naherholungsgebiet"
+import { GoogleRoutesAPI } from "@langchain/community/tools/google_routes"
 import {
   convertAllToAlfredFormat,
   convertToAlfredFormat,
@@ -18,7 +19,7 @@ import { weatherTool } from "./tools/weather"
 import { todayAsString } from "./utils/time"
 import { clockerTool } from "./tools/clocker"
 import { timeTool } from "./tools/time"
-import { travelTime } from "./tools/maps"
+import { currentLocation } from "./tools/maps"
 
 const MEMORY_KEY = "chat_history"
 async function getMemoryPrompt() {
@@ -31,6 +32,9 @@ async function getMemoryPrompt() {
       Try to use some emojis to make the conversation more fun. 
       Try to be precise and dont add too much information.
       A usual working day is 8 hours long.
+      You dont know the current time.
+      The user prefers to take the car.
+      Check the tools provided carefully and use them if applicable before asking the user.
       `,
     ],
     new MessagesPlaceholder(MEMORY_KEY),
@@ -84,7 +88,9 @@ async function initializeAgent() {
     weatherTool,
     clockerTool,
     timeTool,
-    travelTime,
+    // travelTime,
+    currentLocation,
+    new GoogleRoutesAPI({ apiKey: process.env.GOOGLE_MAPS_API_KEY }),
   ]
   const agent = createToolCallingAgent({
     llm,

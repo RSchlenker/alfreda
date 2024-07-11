@@ -20,6 +20,7 @@ export const clockerTool = new DynamicStructuredTool({
 } as any)
 
 async function getTimes({ timeFrame }): Promise<String> {
+  console.log(`Requesting worked hours for ${timeFrame}`)
   let command = "clocker report"
   if (timeFrame === "week") {
     command += " --week"
