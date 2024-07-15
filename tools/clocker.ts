@@ -7,7 +7,8 @@ const execPromisified = util.promisify(exec)
 
 export const clockerTool = new DynamicStructuredTool({
   name: "WorkingTime",
-  description: "Get the worked hours for the given time frame",
+  description:
+    "Get the worked hours for the given time frame. Use this tool to check how much time the user worked.",
   schema: z.object({
     timeFrame: z
       .enum(["today", "week", "month"])

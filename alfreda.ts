@@ -20,21 +20,25 @@ import { todayAsString } from "./utils/time"
 import { clockerTool } from "./tools/clocker"
 import { timeTool } from "./tools/time"
 import { currentLocation } from "./tools/maps"
+import { metainfoTool } from "./tools/metainfo"
 
 const MEMORY_KEY = "chat_history"
 async function getMemoryPrompt() {
   return ChatPromptTemplate.fromMessages([
     [
       "system",
-      `You are very powerful assistant and your name is Alfreda. 
+      `You are very powerful assistant and your name is Alfreda.
+      Work step by step. Always check if there is a tool that can help you.
+      Check the description of each tool to understand what it does.
       Today is ${todayAsString()} 
       You are very friendly. 
       Try to use some emojis to make the conversation more fun. 
       Try to be precise and dont add too much information.
-      A usual working day is 8 hours long.
       You dont know the current time.
-      The user prefers to take the car.
-      Check the tools provided carefully and use them if applicable before asking the user.
+      Here is some meta info about the user:
+       - The user is in Engen, Germany.
+       - The user prefers to take the car.
+       - The user works 8 hours a day.
       `,
     ],
     new MessagesPlaceholder(MEMORY_KEY),
@@ -88,9 +92,9 @@ async function initializeAgent() {
     weatherTool,
     clockerTool,
     timeTool,
-    // travelTime,
     currentLocation,
     new GoogleRoutesAPI({ apiKey: process.env.GOOGLE_MAPS_API_KEY }),
+    metainfoTool,
   ]
   const agent = createToolCallingAgent({
     llm,
