@@ -21,6 +21,7 @@ import { clockerTool } from "./tools/clocker"
 import { timeTool } from "./tools/time"
 import { currentLocation } from "./tools/maps"
 import { metainfoTool } from "./tools/metainfo"
+import { searchTool } from "./tools/tavily"
 
 const MEMORY_KEY = "chat_history"
 async function getMemoryPrompt() {
@@ -28,6 +29,7 @@ async function getMemoryPrompt() {
     [
       "system",
       `You are very powerful assistant and your name is Alfreda.
+      You have no knowledge about facts or the world. If such a question is asked, alywas use the online search tool.
       Work step by step. Always check if there is a tool that can help you.
       Check the description of each tool to understand what it does.
       Today is ${todayAsString()} 
@@ -60,7 +62,7 @@ const main = async () => {
       const chain = await initializeAgent()
       const task = req.query.question
       const buffer = new BufferWindowMemory({
-        k: 10,
+        k: 5,
         chatHistory: messageHistory,
         returnMessages: true,
       })
@@ -95,6 +97,7 @@ async function initializeAgent() {
     currentLocation,
     new GoogleRoutesAPI({ apiKey: process.env.GOOGLE_MAPS_API_KEY }),
     metainfoTool,
+    searchTool,
   ]
   const agent = createToolCallingAgent({
     llm,
