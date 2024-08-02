@@ -1,11 +1,14 @@
 import { ChainValues } from "@langchain/core/dist/utils/types"
 import { AIMessage, BaseMessage } from "@langchain/core/messages"
 
-export function convertAllToAlfredFormat(messages: BaseMessage[]): object {
+export function convertAllToAlfredFormat(
+  messages: BaseMessage[],
+  aiName: string = "Alfreda",
+): object {
   const response = messages
     .map((message) => {
       if (message instanceof AIMessage) {
-        return "**Alfreda:**\n" + message.content
+        return `**${aiName}:**` + message.content
       } else {
         return `> ${message.content}`
       }
@@ -25,13 +28,16 @@ export function convertAllToAlfredFormat(messages: BaseMessage[]): object {
   }
 }
 
-export function convertToAlfredFormat(textResponse: ChainValues) {
+export function convertToAlfredFormat(
+  textResponse: ChainValues,
+  aiName: string = "Alfreda",
+) {
   let chat = `> ${textResponse.input}
-  **Alfreda:**
+  **${aiName}:**
   ${textResponse.output}`
   return JSON.stringify({
     response: chat,
-    footer: "alfreda",
+    footer: aiName,
     behaviour: {
       response: "append",
       scroll: "end",
